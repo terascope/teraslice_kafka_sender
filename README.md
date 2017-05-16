@@ -14,8 +14,6 @@ The input Array is returned as Output.
 
 | Name | Description | Default | Required |
 | ---- | ----------- | ------- | -------- |
-| parameter | description of parameter | default for parameter |
-
 | topic | Name of the Kafka topic to send data to | | Y |
 | id_field | Field in the incoming record that contains keys | | N |
 | timestamp_field | Field in the incoming record that contains a timestamp to set on the record | | N |
