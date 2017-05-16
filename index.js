@@ -101,6 +101,11 @@ function schema(){
             doc: 'Set to true to have a timestamp generated as records are added to the topic',
             default: '',
             format: String
+        },
+        connection: {
+            doc: 'The Kafka producer connection to use.',
+            default: '',
+            format: required_String
         }
     }
 }
