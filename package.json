@@ -1,0 +1,20 @@
+{
+  "name": "teraslice_kafka_sender",
+  "version": "0.0.1",
+  "description": "Teraslice processor to send data to a kafka topic",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/terascope/teraslice_kafka_sender.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/terascope/teraslice_kafka_sender/issues"
+  },
+  "homepage": "https://github.com/terascope/teraslice_kafka_sender#readme",
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "node-rdkafka": "^0.10.2"
+  }
+}
