@@ -5,18 +5,10 @@ var Promise = require("bluebird");
 function newProcessor(context, opConfig) {
     var producer_ready = false;
 
-    // TODO: all the connection information will need to move into
-    // a terafoundation connector
-    var Kafka = require("node-rdkafka");
-
-    var producer = new Kafka.Producer({
-      'metadata.broker.list': 'localhost:9092',
-      'queue.buffering.max.messages': 500000,
-      'queue.buffering.max.ms': 1000,
-      'batch.num.messages': 100000,
-    });
-
-    producer.connect();
+    var producer = context.foundation.getConnection({
+        type: "kafka",
+        endpoint: opConfig.connection
+    }).client;
 
     producer.on('ready', function() {
         producer_ready = true;
@@ -65,7 +57,7 @@ function newProcessor(context, opConfig) {
                             return reject(err);
                         }
 
-                        resolve(data)
+                        resolve(data);
                     });
                 }
                 else {
@@ -105,7 +97,7 @@ function schema(){
         connection: {
             doc: 'The Kafka producer connection to use.',
             default: '',
-            format: required_String
+            format: 'required_String'
         }
     }
 }
