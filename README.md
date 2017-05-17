@@ -1,3 +1,11 @@
+# Processor - teraslice_kafka_sender
+
+To install from the root of your teraslice instance.
+
+```
+npm install terascope/teraslice_kafka_sender
+```
+
 # Description
 
 Teraslice processor to send data to a Kafka topic.
