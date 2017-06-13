@@ -7,7 +7,10 @@ function newProcessor(context, opConfig) {
 
     var producer = context.foundation.getConnection({
         type: "kafka",
-        endpoint: opConfig.connection
+        endpoint: opConfig.connection,
+        options: {
+            type: "producer"
+        }
     }).client;
 
     producer.on('ready', function() {
