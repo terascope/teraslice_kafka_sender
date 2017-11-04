@@ -26,7 +26,8 @@ The input Array is returned as Output.
 | id_field | Field in the incoming record that contains keys | | N |
 | timestamp_field | Field in the incoming record that contains a timestamp to set on the record | | N |
 | timestamp_now | Set to true to have a timestamp generated as records are added to the topic | | N |
-| connection | The kafka producer connection to use | | Y |
+| connection | The kafka producer connection to use | | N |
+| compression | Type of compression to use on the data. Options: gzip, snappy, lz4 and none | gzip | N |
 
 # Job configuration example
 

@@ -10,6 +10,9 @@ function newProcessor(context, opConfig) {
         endpoint: opConfig.connection,
         options: {
             type: "producer"
+        },
+        rdkafka_options: {
+            'compression.codec': opConfig.compression
         }
     }).client;
 
@@ -99,8 +102,13 @@ function schema(){
         },
         connection: {
             doc: 'The Kafka producer connection to use.',
-            default: '',
-            format: 'required_String'
+            default: 'default',
+            format: String
+        },
+        compression: {
+            doc: 'Type of compression to use',
+            default: 'gzip',
+            format: ['none','gzip','snappy','lz4']
         }
     }
 }
