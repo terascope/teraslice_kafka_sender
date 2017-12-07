@@ -5,6 +5,8 @@ const Promise = require('bluebird');
 function newProcessor(context, opConfig) {
     let producerReady = false;
 
+    const bufferSize = 5 * opConfig.size;
+
     const producer = context.foundation.getConnection({
         type: 'kafka',
         endpoint: opConfig.connection,
@@ -13,7 +15,7 @@ function newProcessor(context, opConfig) {
         },
         rdkafka_options: {
             'compression.codec': opConfig.compression,
-            'queue.buffering.max.messages': 10 * opConfig.size,
+            'queue.buffering.max.messages': bufferSize,
             'queue.buffering.max.ms': opConfig.wait,
             'batch.num.messages': opConfig.size,
         }
@@ -29,7 +31,7 @@ function newProcessor(context, opConfig) {
         }
 
         function batch(start) {
-            let end = start + opConfig.size;
+            let end = start + bufferSize;
             if (end > data.length) end = data.length;
 
             if (end === 0) {
