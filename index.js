@@ -12,7 +12,10 @@ function newProcessor(context, opConfig) {
             type: 'producer'
         },
         rdkafka_options: {
-            'compression.codec': opConfig.compression
+            'compression.codec': opConfig.compression,
+            'queue.buffering.max.messages': 10 * opConfig.size,
+            'queue.buffering.max.ms': opConfig.wait,
+            'batch.num.messages': opConfig.size,
         }
     }).client;
 
@@ -25,9 +28,19 @@ function newProcessor(context, opConfig) {
             reject(err);
         }
 
-        function process() {
+        function batch(start) {
+            let end = start + opConfig.size;
+            if (end > data.length) end = data.length;
+
+            if (end === 0) {
+                resolve(data);
+                return;
+            }
+
             if (producerReady) {
-                data.forEach((record) => {
+                for (let i = start; i < end; i += 1) {
+                    const record = data[i];
+
                     let key = null;
                     let timestamp = null;
 
@@ -52,27 +65,33 @@ function newProcessor(context, opConfig) {
                         key,
                         timestamp
                     );
-                });
+                }
 
                 // TODO: this flush timeout may need to be configurable
-                producer.flush(30000, (err) => {
+                producer.flush(60000, (err) => {
                     // Remove the error listener so they don't accrue across slices.
                     producer.removeListener('event.error', error);
 
                     if (err) {
-                        return reject(err);
+                        reject(err);
+                        return;
                     }
 
-                    return resolve(data);
+                    if (end === data.length) {
+                        resolve(data);
+                        return;
+                    }
+
+                    batch(end);
                 });
             } else {
-                setTimeout(process, 100);
+                setTimeout(() => batch(start), 20);
             }
         }
 
         producer.on('event.error', error);
 
-        process();
+        batch(0);
     }));
 }
 
@@ -108,6 +127,16 @@ function schema() {
             doc: 'Type of compression to use',
             default: 'gzip',
             format: ['none', 'gzip', 'snappy', 'lz4']
+        },
+        wait: {
+            doc: 'How long to wait for `size` messages to become available on the producer.',
+            default: 20,
+            format: Number
+        },
+        size: {
+            doc: 'How many messages will be batched and sent to kafka together.',
+            default: 10000,
+            format: Number
         }
     };
 }
