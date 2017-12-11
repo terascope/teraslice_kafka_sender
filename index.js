@@ -18,6 +18,7 @@ function newProcessor(context, opConfig) {
             'queue.buffering.max.messages': bufferSize,
             'queue.buffering.max.ms': opConfig.wait,
             'batch.num.messages': opConfig.size,
+            'topic.metadata.refresh.interval.ms': opConfig.metadata_refresh
         }
     }).client;
 
@@ -138,6 +139,11 @@ function schema() {
         size: {
             doc: 'How many messages will be batched and sent to kafka together.',
             default: 10000,
+            format: Number
+        },
+        metadata_refresh: {
+            doc: 'How long to wait for `size` messages to become available on the producer.',
+            default: 300000,
             format: Number
         }
     };
