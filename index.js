@@ -18,7 +18,8 @@ function newProcessor(context, opConfig) {
             'queue.buffering.max.messages': bufferSize,
             'queue.buffering.max.ms': opConfig.wait,
             'batch.num.messages': opConfig.size,
-            'topic.metadata.refresh.interval.ms': opConfig.metadata_refresh
+            'topic.metadata.refresh.interval.ms': opConfig.metadata_refresh,
+            'log.connection.close': false
         }
     }).client;
 
@@ -142,7 +143,7 @@ function schema() {
             format: Number
         },
         metadata_refresh: {
-            doc: 'How long to wait for `size` messages to become available on the producer.',
+            doc: 'How often the producer will poll the broker for metadata information. Set to -1 to disable polling.',
             default: 300000,
             format: Number
         }
